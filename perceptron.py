@@ -21,12 +21,12 @@ class PerceptronClassifier:
         for label in legalLabels:
             self.weights[label] = util.Counter()  # this is the data-structure you should use
 
-    def _predict(self, data, label):
-        activation = 0.0
-        for key, value in self.weights[label].items():
-            activation += value * data[key]
-
-        return activation
+    # def _predict(self, data, label):
+    #     activation = 0.0
+    #     for key, value in self.weights[label].items():
+    #         activation += value * data[key]
+    #
+    #     return activation
 
     def train(self, trainingData, trainingLabels, validationData, validationLabels):
         """

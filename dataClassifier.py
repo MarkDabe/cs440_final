@@ -14,7 +14,6 @@ DIGIT_DATUM_HEIGHT = 28
 FACE_DATUM_WIDTH = 60
 FACE_DATUM_HEIGHT = 70
 
-
 def basicFeatureExtractorDigit(datum):
     """
     Returns a set of pixel features indicating whether
@@ -56,21 +55,47 @@ def enhancedFeatureExtractorDigit(datum):
     for this datum (datum is of type samples.Datum).
 
     ## DESCRIBE YOUR ENHANCED FEATURES HERE...
-
     ##
     """
+
     features = basicFeatureExtractorDigit(datum)
+    num_columns = 0
+    for i in range(0, 28):
+        column = 0
+        for j in range(0, 28):
+            column += features[(j, i)]
+        if column > 6:
+            num_columns += 1
 
-    "*** YOUR CODE HERE ***"
+    features["columns"] = num_columns
 
-    return features
+    num_rows = 0
+    for i in range(0, 28):
+        row = 0
+        for j in range(0, 28):
+            row += features[(i, j)]
+        if row > 6:
+            num_rows += 1
 
+    features["rows"] = num_rows
 
-def contestFeatureExtractorDigit(datum):
-    """
-    Specify features to use for the minicontest
-    """
-    features = basicFeatureExtractorDigit(datum)
+    left_top_score = 0
+
+    loop_matrix = [
+                   [0,0,0,0,0,0,0],[0,0,0,0,0,0,0],
+                   [0,0,0,0,0,0,0],[0,0,0,1,1,1,1],
+                   [0,0,0,1,1,1,1],[0,0,0,1,1,1,1],
+                   [0,0,0,1,1,1,1]
+                  ]
+
+    for i in range(len(loop_matrix)):
+        for j in range(len(loop_matrix[0])):
+            left_top_score += loop_matrix[i][j] * features[(i, j)]
+
+    features["left_top"] = left_top_score
+
+    print features["left_top"]
+
     return features
 
 
@@ -79,6 +104,7 @@ def enhancedFeatureExtractorFace(datum):
     Your feature extraction playground for faces.
     It is your choice to modify this.
     """
+
     features = basicFeatureExtractorFace(datum)
     return features
 
@@ -109,7 +135,7 @@ def analysis(classifier, guesses, testLabels, testData, rawTestData, printImage)
     for i in range(len(guesses)):
         prediction = guesses[i]
         truth = testLabels[i]
-        if (prediction != truth):
+        if prediction != truth:
             print("===================================")
             print("Mistake on example %d" % i)
             print("Predicted %d; truth is %d" % (prediction, truth))
@@ -164,7 +190,7 @@ def readCommand(argv):
                       choices=['mostFrequent', 'naiveBayes', 'perceptron'],
                       default='mostFrequent')
     parser.add_option('-d', '--data', help=default('Dataset to use'), choices=['digits', 'faces'], default='digits')
-    parser.add_option('-t', '--training', help=default('The size of the training set'), default=400, type="int")
+    parser.add_option('-t', '--training', help=default('The size of the training set'), default=100, type="int")
     parser.add_option('-f', '--features', help=default('Whether to use enhanced features'), default=False,
                       action="store_true")
     parser.add_option('-o', '--odds', help=default('Whether to compute odds ratios'), default=False,
@@ -187,11 +213,9 @@ def readCommand(argv):
     print("--------------------")
     print("data:\t\t" + options.data)
     print("classifier:\t\t" + options.classifier)
-    if not options.classifier == 'minicontest':
-        print("using enhanced features?:\t" + str(options.features))
-    else:
-        print("using minicontest feature extractor")
-    print("training set size:\t" + str(options.training))
+    print("using enhanced features?:\t" + str(options.features))
+
+
     if (options.data == "digits"):
         printImage = ImagePrinter(DIGIT_DATUM_WIDTH, DIGIT_DATUM_HEIGHT).printImage
         if (options.features):
@@ -280,9 +304,12 @@ def runClassifier(args, options):
     printImage = args['printImage']
 
     # Load data
-    numTraining = options.training
+    # numTraining = options.training
+
 
     if (options.data == "faces"):
+        numTraining = 451
+
         rawTrainingData = samples.loadDataFile("facedata/facedatatrain", numTraining, FACE_DATUM_WIDTH,
                                                FACE_DATUM_HEIGHT)
         trainingLabels = samples.loadLabelsFile("facedata/facedatatrainlabels", numTraining)
@@ -292,6 +319,7 @@ def runClassifier(args, options):
         rawTestData = samples.loadDataFile("facedata/facedatatest", TEST_SET_SIZE, FACE_DATUM_WIDTH, FACE_DATUM_HEIGHT)
         testLabels = samples.loadLabelsFile("facedata/facedatatestlabels", TEST_SET_SIZE)
     else:
+        numTraining = 5000
         rawTrainingData = samples.loadDataFile("digitdata/trainingimages", numTraining, DIGIT_DATUM_WIDTH,
                                                DIGIT_DATUM_HEIGHT)
         trainingLabels = samples.loadLabelsFile("digitdata/traininglabels", numTraining)

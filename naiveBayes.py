@@ -18,6 +18,9 @@ class NaiveBayesClassifier(classificationMethod.ClassificationMethod):
         self.type = "naivebayes"
         self.k = 1  # this is the smoothing parameter, ** use it in your train method **
         self.automaticTuning = False  # Look at this flag to decide whether to choose k automatically ** use this in your train method **
+        self.classes = None
+        self.prior_prob = None
+        self.likelihoods = None
 
     def setSmoothing(self, k):
         """
@@ -66,6 +69,8 @@ class NaiveBayesClassifier(classificationMethod.ClassificationMethod):
         for key in prior_prob.keys():
             prior_prob[key] = prior_prob[key] / float(no_of_examples)
 
+        self.prior_prob = prior_prob
+
         likelihoods = dict()
         for cls, prob in prior_prob.items():
             # initializing the dictionary
@@ -87,10 +92,13 @@ class NaiveBayesClassifier(classificationMethod.ClassificationMethod):
                     likelihoods[cls][key].append(value)
 
         classes = [key for key in prior_prob]
+        self.classes = classes
         _like = likelihoods
         for cls in classes:
             for key, value in likelihoods[cls].items():
                 likelihoods[cls][key] = self._occurrences(likelihoods[cls][key])
+
+        self.likelihoods = likelihoods
 
         results = {}
         correct = 0
@@ -141,9 +149,24 @@ class NaiveBayesClassifier(classificationMethod.ClassificationMethod):
         logJoint[3] = <Estimate of log( P(Label = 3, datum) )>
         """
         logJoint = util.Counter()
+        for cls in self.classes:
+            class_probability = self.prior_prob[cls]
+            for key, value in datum.items():
+                relative_feature_values = self.likelihoods[cls][key]
+                class_probability *= relative_feature_values.get(datum[key], 0.01)
 
-        "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+            logJoint[cls] = class_probability
+
+        norm_factor = 0.0
+
+        for key, value in logJoint.items():
+            norm_factor += value
+
+        for key in logJoint:
+            try:
+                logJoint[key] = logJoint[key] / norm_factor
+            except ZeroDivisionError:
+                pass
 
         return logJoint
 
