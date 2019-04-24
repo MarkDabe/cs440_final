@@ -7,6 +7,7 @@ import perceptron
 import samples
 import sys
 import util
+import math
 
 TEST_SET_SIZE = 100
 DIGIT_DATUM_WIDTH = 28
@@ -59,42 +60,80 @@ def enhancedFeatureExtractorDigit(datum):
     """
 
     features = basicFeatureExtractorDigit(datum)
-    num_columns = 0
-    for i in range(0, 28):
-        column = 0
-        for j in range(0, 28):
-            column += features[(j, i)]
-        if column > 6:
-            num_columns += 1
-
-    features["columns"] = num_columns
-
-    num_rows = 0
-    for i in range(0, 28):
-        row = 0
-        for j in range(0, 28):
-            row += features[(i, j)]
-        if row > 6:
-            num_rows += 1
-
-    features["rows"] = num_rows
-
-    left_top_score = 0
-
-    loop_matrix = [
-                   [0,0,0,0,0,0,0],[0,0,0,0,0,0,0],
-                   [0,0,0,0,0,0,0],[0,0,0,1,1,1,1],
-                   [0,0,0,1,1,1,1],[0,0,0,1,1,1,1],
-                   [0,0,0,1,1,1,1]
-                  ]
-
-    for i in range(len(loop_matrix)):
-        for j in range(len(loop_matrix[0])):
-            left_top_score += loop_matrix[i][j] * features[(i, j)]
-
-    features["left_top"] = left_top_score
-
-    print features["left_top"]
+    # num_columns = 0
+    # for i in range(0, 28):
+    #     column = 0
+    #     for j in range(0, 28):
+    #         column += features[(j, i)]
+    #     if column > 6:
+    #         num_columns += 1
+    #
+    # features["columns"] = num_columns
+    #
+    # num_rows = 0
+    # for i in range(0, 28):
+    #     row = 0
+    #     for j in range(0, 28):
+    #         row += features[(i, j)]
+    #     if row > 6:
+    #         num_rows += 1
+    #
+    # features["rows"] = num_rows
+    #
+    # left_top_score = 0
+    #
+    # loop_matrix = [
+    #                [0,0,0,0,0,0,0],[0,0,0,0,0,0,0],
+    #                [0,0,0,0,0,0,0],[0,0,0,1,1,1,1],
+    #                [0,0,0,1,1,1,1],[0,0,0,1,1,1,1],
+    #                [0,0,0,1,1,1,1]
+    #               ]
+    #
+    # for i in range(len(loop_matrix)):
+    #     for j in range(len(loop_matrix[0])):
+    #         left_top_score += loop_matrix[i][j] * features[(i, j)]
+    #
+    # features["left_top"] = left_top_score
+    #
+    # print features["left_top"]
+    #
+    # for x in range(DIGIT_DATUM_WIDTH):
+    #     for y in range(DIGIT_DATUM_HEIGHT):
+    #         if (datum.getPixel(x, y) > datum.getPixel(x, y - 1)):
+    #             features[(x, y, 0)] = 1
+    #         else:
+    #             features[(x, y, 0)] = 0
+    #         if (datum.getPixel(x, y - 1) > datum.getPixel(x, y)):
+    #             features[(x, y, 1)] = 1
+    #         else:
+    #             features[(x, y, 1)] = 0
+    #         if (datum.getPixel(x, y) > datum.getPixel(x - 1, y)):
+    #             features[(x, y, 2)] = 1
+    #         else:
+    #             features[(x, y, 2)] = 0
+    #         if (datum.getPixel(x - 1, y) > datum.getPixel(x, y)):
+    #             features[(x, y, 3)] = 1
+    #         else:
+    #             features[(x, y, 3)] = 0
+    #
+    # def horizontalLineWidth():
+    #     halfHorizontalLineWidth = DIGIT_DATUM_WIDTH / 3
+    #     for y in range(DIGIT_DATUM_HEIGHT):
+    #         x_count = len([x for x in range(DIGIT_DATUM_WIDTH) if datum.getPixel(x, y) > 0])
+    #         if x_count > halfHorizontalLineWidth:
+    #             return 1
+    #     return 0
+    #
+    # def verticalLineHeight():
+    #     halfVerticalLineHeight = DIGIT_DATUM_HEIGHT / 3
+    #     for x in range(DIGIT_DATUM_WIDTH):
+    #         y_count = len([y for y in range(DIGIT_DATUM_HEIGHT) if datum.getPixel(x, y) > 0])
+    #         if y_count > halfVerticalLineHeight:
+    #             return 1
+    #     return 0
+    #
+    # features[(0)] = horizontalLineWidth()
+    # features[(1)] = verticalLineHeight()
 
     return features
 
@@ -106,7 +145,40 @@ def enhancedFeatureExtractorFace(datum):
     """
 
     features = basicFeatureExtractorFace(datum)
-    return features
+    first_grad = util.Counter()
+    for x in range(FACE_DATUM_WIDTH):
+        for y in range(FACE_DATUM_HEIGHT):
+            if x > 0 and y > 0 and x < FACE_DATUM_WIDTH - 1 and y < FACE_DATUM_HEIGHT - 1:
+                grax = (features[(x - 1, y + 1)] + 2 * features[(x, y + 1)] + features[(x + 1, y + 1)]) - (
+                            features[(x - 1, y - 1)] + 2 * features[(x, y - 1)] + features[(x + 1, y - 1)])
+                gray = (features[(x - 1, y + 1)] + 2 * features[(x - 1, y)] + features[(x - 1, y - 1)]) - (
+                            features[(x + 1, y + 1)] + 2 * features[(x + 1, y)] + features[(x + 1, y - 1)])
+                first_grad[(x, y)] = math.sqrt(math.pow(grax, 2) + math.pow(gray, 2))
+                if first_grad[(x, y)] > 0:
+                    first_grad[(x, y)] = 1
+                else:
+                    first_grad[(x, y)] = 0
+            else:
+                first_grad[(x, y)] = 0
+
+    second_grad = util.Counter()
+
+    for x in range(FACE_DATUM_WIDTH):
+        for y in range(FACE_DATUM_HEIGHT):
+            if x > 0 and y > 0 and x < FACE_DATUM_WIDTH - 1 and y < FACE_DATUM_HEIGHT - 1:
+                grax = (first_grad[(x - 1, y + 1)] + 2 * first_grad[(x, y + 1)] + first_grad[(x + 1, y + 1)]) - (
+                            first_grad[(x - 1, y - 1)] + 2 * first_grad[(x, y - 1)] + first_grad[(x + 1, y - 1)])
+                gray = (first_grad[(x - 1, y + 1)] + 2 * first_grad[(x - 1, y)] + first_grad[(x - 1, y - 1)]) - (
+                            first_grad[(x + 1, y + 1)] + 2 * first_grad[(x + 1, y)] + first_grad[(x + 1, y - 1)])
+                second_grad[(x, y)] = math.sqrt(math.pow(grax, 2) + math.pow(gray, 2))
+                if second_grad[(x, y)] > 0:
+                    second_grad[(x, y)] = 1
+                else:
+                    second_grad[(x, y)] = 0
+            else:
+                second_grad[(x, y)] = 0
+
+    return second_grad
 
 
 def analysis(classifier, guesses, testLabels, testData, rawTestData, printImage):
