@@ -100,32 +100,32 @@ class NaiveBayesClassifier(classificationMethod.ClassificationMethod):
 
         self.likelihoods = likelihoods
 
-        results = {}
-        correct = 0
-        for itr in range(len(validationData)):
-            for cls in classes:
-                class_probability = prior_prob[cls]
-                for key, value in validationData[itr].items():
-                    relative_feature_values = likelihoods[cls][key]
-                    class_probability *= relative_feature_values.get(validationData[itr][key], 0.01)
-
-                results[cls] = class_probability
-
-            norm_factor = 0.0
-
-            for key, value in results.items():
-                norm_factor += value
-
-            for key in results:
-                try:
-                    results[key] = results[key]/norm_factor
-                except ZeroDivisionError:
-                    pass
-
-            if (list(results.keys())[list(results.values()).index(max([value for key, value in results.items()]))]) == validationLabels[itr]:
-                correct += 1
-
-        print "validation accuracy: {}%".format((correct/float(len(validationLabels))) * 100)
+        # results = {}
+        # correct = 0
+        # for itr in range(len(validationData)):
+        #     for cls in classes:
+        #         class_probability = prior_prob[cls]
+        #         for key, value in validationData[itr].items():
+        #             relative_feature_values = likelihoods[cls][key]
+        #             class_probability *= relative_feature_values.get(validationData[itr][key], 0.01)
+        #
+        #         results[cls] = class_probability
+        #
+        #     norm_factor = 0.0
+        #
+        #     for key, value in results.items():
+        #         norm_factor += value
+        #
+        #     for key in results:
+        #         try:
+        #             results[key] = results[key]/norm_factor
+        #         except ZeroDivisionError:
+        #             pass
+        #
+        #     if (list(results.keys())[list(results.values()).index(max([value for key, value in results.items()]))]) == validationLabels[itr]:
+        #         correct += 1
+        #
+        # print "validation accuracy: {}%".format((correct/float(len(validationLabels))) * 100)
 
 
     def classify(self, testData):
@@ -153,20 +153,9 @@ class NaiveBayesClassifier(classificationMethod.ClassificationMethod):
             class_probability = self.prior_prob[cls]
             for key, value in datum.items():
                 relative_feature_values = self.likelihoods[cls][key]
-                class_probability *= relative_feature_values.get(datum[key], 0.01)
+                class_probability += math.log(relative_feature_values.get(datum[key], 0.01))
 
             logJoint[cls] = class_probability
-
-        norm_factor = 0.0
-
-        for key, value in logJoint.items():
-            norm_factor += value
-
-        for key in logJoint:
-            try:
-                logJoint[key] = logJoint[key] / norm_factor
-            except ZeroDivisionError:
-                pass
 
         return logJoint
 

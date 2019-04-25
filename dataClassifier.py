@@ -15,6 +15,7 @@ DIGIT_DATUM_HEIGHT = 28
 FACE_DATUM_WIDTH = 60
 FACE_DATUM_HEIGHT = 70
 
+
 def basicFeatureExtractorDigit(datum):
     """
     Returns a set of pixel features indicating whether
@@ -145,40 +146,24 @@ def enhancedFeatureExtractorFace(datum):
     """
 
     features = basicFeatureExtractorFace(datum)
-    first_grad = util.Counter()
-    for x in range(FACE_DATUM_WIDTH):
-        for y in range(FACE_DATUM_HEIGHT):
-            if x > 0 and y > 0 and x < FACE_DATUM_WIDTH - 1 and y < FACE_DATUM_HEIGHT - 1:
-                grax = (features[(x - 1, y + 1)] + 2 * features[(x, y + 1)] + features[(x + 1, y + 1)]) - (
-                            features[(x - 1, y - 1)] + 2 * features[(x, y - 1)] + features[(x + 1, y - 1)])
-                gray = (features[(x - 1, y + 1)] + 2 * features[(x - 1, y)] + features[(x - 1, y - 1)]) - (
-                            features[(x + 1, y + 1)] + 2 * features[(x + 1, y)] + features[(x + 1, y - 1)])
-                first_grad[(x, y)] = math.sqrt(math.pow(grax, 2) + math.pow(gray, 2))
-                if first_grad[(x, y)] > 0:
-                    first_grad[(x, y)] = 1
-                else:
-                    first_grad[(x, y)] = 0
-            else:
-                first_grad[(x, y)] = 0
-
-    second_grad = util.Counter()
+    image_gradient = util.Counter()
 
     for x in range(FACE_DATUM_WIDTH):
         for y in range(FACE_DATUM_HEIGHT):
-            if x > 0 and y > 0 and x < FACE_DATUM_WIDTH - 1 and y < FACE_DATUM_HEIGHT - 1:
-                grax = (first_grad[(x - 1, y + 1)] + 2 * first_grad[(x, y + 1)] + first_grad[(x + 1, y + 1)]) - (
-                            first_grad[(x - 1, y - 1)] + 2 * first_grad[(x, y - 1)] + first_grad[(x + 1, y - 1)])
-                gray = (first_grad[(x - 1, y + 1)] + 2 * first_grad[(x - 1, y)] + first_grad[(x - 1, y - 1)]) - (
-                            first_grad[(x + 1, y + 1)] + 2 * first_grad[(x + 1, y)] + first_grad[(x + 1, y - 1)])
-                second_grad[(x, y)] = math.sqrt(math.pow(grax, 2) + math.pow(gray, 2))
-                if second_grad[(x, y)] > 0:
-                    second_grad[(x, y)] = 1
+            if 0 < x < FACE_DATUM_WIDTH - 1 and y > 0 and y < FACE_DATUM_HEIGHT - 1:
+                grad_x = (features[(x - 1, y + 1)] + 2 * features[(x, y + 1)] + features[(x + 1, y + 1)]) - (
+                        features[(x - 1, y - 1)] + 2 * features[(x, y - 1)] + features[(x + 1, y - 1)])
+                grad_y = (features[(x - 1, y + 1)] + 2 * features[(x - 1, y)] + features[(x - 1, y - 1)]) - (
+                        features[(x + 1, y + 1)] + 2 * features[(x + 1, y)] + features[(x + 1, y - 1)])
+                image_gradient[(x, y)] = math.sqrt(math.pow(grad_x, 2) + math.pow(grad_y, 2))
+                if image_gradient[(x, y)] > 0:
+                    image_gradient[(x, y)] = 1
                 else:
-                    second_grad[(x, y)] = 0
+                    image_gradient[(x, y)] = 0
             else:
-                second_grad[(x, y)] = 0
+                image_gradient[(x, y)] = 0
 
-    return second_grad
+    return image_gradient
 
 
 def analysis(classifier, guesses, testLabels, testData, rawTestData, printImage):
@@ -287,16 +272,15 @@ def readCommand(argv):
     print("classifier:\t\t" + options.classifier)
     print("using enhanced features?:\t" + str(options.features))
 
-
-    if (options.data == "digits"):
+    if options.data == "digits":
         printImage = ImagePrinter(DIGIT_DATUM_WIDTH, DIGIT_DATUM_HEIGHT).printImage
-        if (options.features):
+        if options.features:
             featureFunction = enhancedFeatureExtractorDigit
         else:
             featureFunction = basicFeatureExtractorDigit
-    elif (options.data == "faces"):
+    elif options.data == "faces":
         printImage = ImagePrinter(FACE_DATUM_WIDTH, FACE_DATUM_HEIGHT).printImage
-        if (options.features):
+        if options.features:
             featureFunction = enhancedFeatureExtractorFace
         else:
             featureFunction = basicFeatureExtractorFace
@@ -305,7 +289,7 @@ def readCommand(argv):
         print(USAGE_STRING)
         sys.exit(2)
 
-    if (options.data == "digits"):
+    if options.data == "digits":
         legalLabels = range(10)
     else:
         legalLabels = range(2)
@@ -326,18 +310,18 @@ def readCommand(argv):
             print(USAGE_STRING)
             sys.exit(2)
 
-    if (options.classifier == "mostFrequent"):
+    if options.classifier == "mostFrequent":
         classifier = mostFrequent.MostFrequentClassifier(legalLabels)
-    elif (options.classifier == "naiveBayes" ):
+    elif options.classifier == "naiveBayes":
         classifier = naiveBayes.NaiveBayesClassifier(legalLabels)
         classifier.setSmoothing(options.smoothing)
-        if (options.autotune):
+        if options.autotune:
             print
             "using automatic tuning for naivebayes"
             classifier.automaticTuning = True
         else:
             print("using smoothing parameter k=%f for naivebayes" % options.smoothing)
-    elif (options.classifier == "perceptron"):
+    elif options.classifier == "perceptron":
         classifier = perceptron.PerceptronClassifier(legalLabels, options.iterations)
 
     else:
@@ -378,8 +362,7 @@ def runClassifier(args, options):
     # Load data
     # numTraining = options.training
 
-
-    if (options.data == "faces"):
+    if options.data == "faces":
         numTraining = 451
 
         rawTrainingData = samples.loadDataFile("facedata/facedatatrain", numTraining, FACE_DATUM_WIDTH,
@@ -414,7 +397,7 @@ def runClassifier(args, options):
     guesses = classifier.classify(validationData)
     correct = [guesses[i] == validationLabels[i] for i in range(len(validationLabels))].count(True)
     print(str(correct), ("correct out of " + str(len(validationLabels)) + " (%.1f%%).") % (
-                100.0 * correct / len(validationLabels)))
+            100.0 * correct / len(validationLabels)))
     print("Testing...")
     guesses = classifier.classify(testData)
     correct = [guesses[i] == testLabels[i] for i in range(len(testLabels))].count(True)
@@ -422,10 +405,10 @@ def runClassifier(args, options):
     analysis(classifier, guesses, testLabels, testData, rawTestData, printImage)
 
     # do odds ratio computation if specified at command line
-    if ((options.odds) & (options.classifier != "mostFrequent")):
+    if options.odds & (options.classifier != "mostFrequent"):
         label1, label2 = options.label1, options.label2
         features_odds = classifier.findHighOddsFeatures(label1, label2)
-        if (options.classifier == "naiveBayes" or options.classifier == "nb"):
+        if options.classifier == "naiveBayes" or options.classifier == "nb":
             string3 = "=== Features with highest odd ratio of label %d over label %d ===" % (label1, label2)
         else:
             string3 = "=== Features for which weight(label %d)-weight(label %d) is biggest ===" % (label1, label2)
