@@ -9,7 +9,7 @@ import sys
 import util
 import math
 
-TEST_SET_SIZE = 100
+TEST_SET_SIZE = 150
 DIGIT_DATUM_WIDTH = 28
 DIGIT_DATUM_HEIGHT = 28
 FACE_DATUM_WIDTH = 60
@@ -146,24 +146,40 @@ def enhancedFeatureExtractorFace(datum):
     """
 
     features = basicFeatureExtractorFace(datum)
-    image_gradient = util.Counter()
+    first_grad = util.Counter()
+    second_grad = util.Counter()
 
     for x in range(FACE_DATUM_WIDTH):
         for y in range(FACE_DATUM_HEIGHT):
             if 0 < x < FACE_DATUM_WIDTH - 1 and y > 0 and y < FACE_DATUM_HEIGHT - 1:
-                grad_x = (features[(x - 1, y + 1)] + 2 * features[(x, y + 1)] + features[(x + 1, y + 1)]) - (
+                grax = (features[(x - 1, y + 1)] + 2 * features[(x, y + 1)] + features[(x + 1, y + 1)]) - (
                         features[(x - 1, y - 1)] + 2 * features[(x, y - 1)] + features[(x + 1, y - 1)])
-                grad_y = (features[(x - 1, y + 1)] + 2 * features[(x - 1, y)] + features[(x - 1, y - 1)]) - (
+                gray = (features[(x - 1, y + 1)] + 2 * features[(x - 1, y)] + features[(x - 1, y - 1)]) - (
                         features[(x + 1, y + 1)] + 2 * features[(x + 1, y)] + features[(x + 1, y - 1)])
-                image_gradient[(x, y)] = math.sqrt(math.pow(grad_x, 2) + math.pow(grad_y, 2))
-                if image_gradient[(x, y)] > 0:
-                    image_gradient[(x, y)] = 1
+                first_grad[(x, y)] = math.sqrt(math.pow(grax, 2) + math.pow(gray, 2))
+                if first_grad[(x, y)] > 0:
+                    first_grad[(x, y)] = 1
                 else:
-                    image_gradient[(x, y)] = 0
+                    first_grad[(x, y)] = 0
             else:
-                image_gradient[(x, y)] = 0
+                first_grad[(x, y)] = 0
 
-    return image_gradient
+    for x in range(FACE_DATUM_WIDTH):
+        for y in range(FACE_DATUM_HEIGHT):
+            if 0 < x < FACE_DATUM_WIDTH - 1 and y > 0 and y < FACE_DATUM_HEIGHT - 1:
+                grax = (first_grad[(x - 1, y + 1)] + 2 * first_grad[(x, y + 1)] + first_grad[(x + 1, y + 1)]) - (
+                        first_grad[(x - 1, y - 1)] + 2 * first_grad[(x, y - 1)] + first_grad[(x + 1, y - 1)])
+                gray = (first_grad[(x - 1, y + 1)] + 2 * first_grad[(x - 1, y)] + first_grad[(x - 1, y - 1)]) - (
+                        first_grad[(x + 1, y + 1)] + 2 * first_grad[(x + 1, y)] + first_grad[(x + 1, y - 1)])
+                second_grad[(x, y)] = math.sqrt(math.pow(grax, 2) + math.pow(gray, 2))
+                if second_grad[(x, y)] > 0:
+                    second_grad[(x, y)] = 1
+                else:
+                    second_grad[(x, y)] = 0
+            else:
+                second_grad[(x, y)] = 0
+
+    return second_grad
 
 
 def analysis(classifier, guesses, testLabels, testData, rawTestData, printImage):
@@ -239,7 +255,7 @@ def default(str):
 
 
 def readCommand(argv):
-    "Processes the command used to run from the command line."
+    """Processes the command used to run from the command line."""
     from optparse import OptionParser
     parser = OptionParser(USAGE_STRING)
 
