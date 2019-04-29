@@ -4,12 +4,15 @@
 import mostFrequent
 import naiveBayes
 import perceptron
+import knn
 import samples
 import sys
 import util
 import math
+import time
+import random
 
-TEST_SET_SIZE = 150
+TEST_SET_SIZE = 200
 DIGIT_DATUM_WIDTH = 28
 DIGIT_DATUM_HEIGHT = 28
 FACE_DATUM_WIDTH = 60
@@ -61,80 +64,43 @@ def enhancedFeatureExtractorDigit(datum):
     """
 
     features = basicFeatureExtractorDigit(datum)
-    # num_columns = 0
-    # for i in range(0, 28):
-    #     column = 0
-    #     for j in range(0, 28):
-    #         column += features[(j, i)]
-    #     if column > 6:
-    #         num_columns += 1
-    #
-    # features["columns"] = num_columns
-    #
-    # num_rows = 0
-    # for i in range(0, 28):
-    #     row = 0
-    #     for j in range(0, 28):
-    #         row += features[(i, j)]
-    #     if row > 6:
-    #         num_rows += 1
-    #
-    # features["rows"] = num_rows
-    #
-    # left_top_score = 0
-    #
-    # loop_matrix = [
-    #                [0,0,0,0,0,0,0],[0,0,0,0,0,0,0],
-    #                [0,0,0,0,0,0,0],[0,0,0,1,1,1,1],
-    #                [0,0,0,1,1,1,1],[0,0,0,1,1,1,1],
-    #                [0,0,0,1,1,1,1]
-    #               ]
-    #
-    # for i in range(len(loop_matrix)):
-    #     for j in range(len(loop_matrix[0])):
-    #         left_top_score += loop_matrix[i][j] * features[(i, j)]
-    #
-    # features["left_top"] = left_top_score
-    #
-    # print features["left_top"]
-    #
-    # for x in range(DIGIT_DATUM_WIDTH):
-    #     for y in range(DIGIT_DATUM_HEIGHT):
-    #         if (datum.getPixel(x, y) > datum.getPixel(x, y - 1)):
-    #             features[(x, y, 0)] = 1
-    #         else:
-    #             features[(x, y, 0)] = 0
-    #         if (datum.getPixel(x, y - 1) > datum.getPixel(x, y)):
-    #             features[(x, y, 1)] = 1
-    #         else:
-    #             features[(x, y, 1)] = 0
-    #         if (datum.getPixel(x, y) > datum.getPixel(x - 1, y)):
-    #             features[(x, y, 2)] = 1
-    #         else:
-    #             features[(x, y, 2)] = 0
-    #         if (datum.getPixel(x - 1, y) > datum.getPixel(x, y)):
-    #             features[(x, y, 3)] = 1
-    #         else:
-    #             features[(x, y, 3)] = 0
-    #
-    # def horizontalLineWidth():
-    #     halfHorizontalLineWidth = DIGIT_DATUM_WIDTH / 3
-    #     for y in range(DIGIT_DATUM_HEIGHT):
-    #         x_count = len([x for x in range(DIGIT_DATUM_WIDTH) if datum.getPixel(x, y) > 0])
-    #         if x_count > halfHorizontalLineWidth:
-    #             return 1
-    #     return 0
-    #
-    # def verticalLineHeight():
-    #     halfVerticalLineHeight = DIGIT_DATUM_HEIGHT / 3
-    #     for x in range(DIGIT_DATUM_WIDTH):
-    #         y_count = len([y for y in range(DIGIT_DATUM_HEIGHT) if datum.getPixel(x, y) > 0])
-    #         if y_count > halfVerticalLineHeight:
-    #             return 1
-    #     return 0
-    #
-    # features[(0)] = horizontalLineWidth()
-    # features[(1)] = verticalLineHeight()
+    for x in range(DIGIT_DATUM_WIDTH):
+        for y in range(DIGIT_DATUM_HEIGHT):
+            if (datum.getPixel(x, y) > datum.getPixel(x, y - 1)):
+                features[(x, y, 0)] = 1
+            else:
+                features[(x, y, 0)] = 0
+            if (datum.getPixel(x, y - 1) > datum.getPixel(x, y)):
+                features[(x, y, 1)] = 1
+            else:
+                features[(x, y, 1)] = 0
+            if (datum.getPixel(x, y) > datum.getPixel(x - 1, y)):
+                features[(x, y, 2)] = 1
+            else:
+                features[(x, y, 2)] = 0
+            if (datum.getPixel(x - 1, y) > datum.getPixel(x, y)):
+                features[(x, y, 3)] = 1
+            else:
+                features[(x, y, 3)] = 0
+
+    def horizontalLineWidth():
+        halfHorizontalLineWidth = DIGIT_DATUM_WIDTH / 3
+        for y in range(DIGIT_DATUM_HEIGHT):
+            x_count = len([x for x in range(DIGIT_DATUM_WIDTH) if datum.getPixel(x, y) > 0])
+            if x_count > halfHorizontalLineWidth:
+                return 1
+        return 0
+
+    def verticalLineHeight():
+        halfVerticalLineHeight = DIGIT_DATUM_HEIGHT / 3
+        for x in range(DIGIT_DATUM_WIDTH):
+            y_count = len([y for y in range(DIGIT_DATUM_HEIGHT) if datum.getPixel(x, y) > 0])
+            if y_count > halfVerticalLineHeight:
+                return 1
+        return 0
+
+    features[(0)] = horizontalLineWidth()
+    features[(1)] = verticalLineHeight()
 
     return features
 
@@ -259,11 +225,16 @@ def readCommand(argv):
     from optparse import OptionParser
     parser = OptionParser(USAGE_STRING)
 
+
+    parser.add_option('-r', '--run',  help=default('automatically runs training and test cycle for 5 times'),
+                      default= False, action='store_true')
+
     parser.add_option('-c', '--classifier', help=default('The type of classifier'),
-                      choices=['mostFrequent', 'naiveBayes', 'perceptron'],
+                      choices=['mostFrequent', 'naiveBayes', 'perceptron', 'knn'],
                       default='mostFrequent')
     parser.add_option('-d', '--data', help=default('Dataset to use'), choices=['digits', 'faces'], default='digits')
-    parser.add_option('-t', '--training', help=default('The size of the training set'), default=100, type="int")
+    parser.add_option('-t', '--training', help=default('The ratio of the training set to use'), default=1.0,
+                      type="float")
     parser.add_option('-f', '--features', help=default('Whether to use enhanced features'), default=False,
                       action="store_true")
     parser.add_option('-o', '--odds', help=default('Whether to compute odds ratios'), default=False,
@@ -340,6 +311,9 @@ def readCommand(argv):
     elif options.classifier == "perceptron":
         classifier = perceptron.PerceptronClassifier(legalLabels, options.iterations)
 
+    elif options.classifier == "knn":
+        classifier = knn.KNN(legalLabels)
+
     else:
         print("Unknown classifier:", options.classifier)
         print(USAGE_STRING)
@@ -376,10 +350,16 @@ def runClassifier(args, options):
     printImage = args['printImage']
 
     # Load data
-    # numTraining = options.training
+    trainingFactor = options.training
+
+    print "training factor {}".format(trainingFactor)
 
     if options.data == "faces":
-        numTraining = 451
+        TEST_SET_SIZE = 150
+
+        numTraining = int(451 * trainingFactor)
+
+        print "using {} datapoints ouy of {} ({}%) for faces".format(numTraining, 451, 100 * (numTraining/float(451)))
 
         rawTrainingData = samples.loadDataFile("facedata/facedatatrain", numTraining, FACE_DATUM_WIDTH,
                                                FACE_DATUM_HEIGHT)
@@ -390,7 +370,12 @@ def runClassifier(args, options):
         rawTestData = samples.loadDataFile("facedata/facedatatest", TEST_SET_SIZE, FACE_DATUM_WIDTH, FACE_DATUM_HEIGHT)
         testLabels = samples.loadLabelsFile("facedata/facedatatestlabels", TEST_SET_SIZE)
     else:
-        numTraining = 5000
+        TEST_SET_SIZE = 1000
+
+        numTraining = int(5000 * trainingFactor)
+
+        print "using {} datapoints ouy of {} ({}%) for digits".format(numTraining, TEST_SET_SIZE, 100 * (numTraining/float(5000)))
+
         rawTrainingData = samples.loadDataFile("digitdata/trainingimages", numTraining, DIGIT_DATUM_WIDTH,
                                                DIGIT_DATUM_HEIGHT)
         trainingLabels = samples.loadLabelsFile("digitdata/traininglabels", numTraining)
@@ -407,18 +392,84 @@ def runClassifier(args, options):
     testData = map(featureFunction, rawTestData)
 
     # Conduct training and testing
-    print("Training...")
-    classifier.train(trainingData, trainingLabels, validationData, validationLabels)
-    print("Validating...")
-    guesses = classifier.classify(validationData)
-    correct = [guesses[i] == validationLabels[i] for i in range(len(validationLabels))].count(True)
-    print(str(correct), ("correct out of " + str(len(validationLabels)) + " (%.1f%%).") % (
-            100.0 * correct / len(validationLabels)))
-    print("Testing...")
-    guesses = classifier.classify(testData)
-    correct = [guesses[i] == testLabels[i] for i in range(len(testLabels))].count(True)
-    print(str(correct), ("correct out of " + str(len(testLabels)) + " (%.1f%%).") % (100.0 * correct / len(testLabels)))
-    analysis(classifier, guesses, testLabels, testData, rawTestData, printImage)
+    automatic = options.run
+    if automatic:
+        outcomes = {}
+        for iterator in range(5):
+            print("Training...")
+
+            if options.data == "faces":
+                rawTrainingData = samples.loadDataFile("facedata/facedatatrain", 451, FACE_DATUM_WIDTH,
+                                                       FACE_DATUM_HEIGHT)
+                trainingLabels = samples.loadLabelsFile("facedata/facedatatrainlabels", 451)
+
+                indices = []
+
+                for x in range(numTraining):
+                    indices.append(random.randint(0, 450))
+
+                randomTrainingData = []
+                randomTrainingLabels = []
+                for index in indices:
+                    randomTrainingData.append(rawTrainingData[index])
+                    randomTrainingLabels.append(trainingLabels[index])
+
+            else:
+                rawTrainingData = samples.loadDataFile("digitdata/trainingimages", 5000, DIGIT_DATUM_WIDTH,
+                                                       DIGIT_DATUM_HEIGHT)
+                trainingLabels = samples.loadLabelsFile("digitdata/traininglabels", 5000)
+
+                indices = []
+
+                for x in range(numTraining):
+                    indices.append(random.randint(0, 4999))
+
+                randomTrainingData = []
+                randomTrainingLabels = []
+
+                for index in indices:
+                    randomTrainingData.append(rawTrainingData[index])
+                    randomTrainingLabels.append(trainingLabels[index])
+
+
+            trainingData = map(featureFunction, randomTrainingData)
+
+            start = time.time()
+            classifier.train(trainingData, randomTrainingLabels, validationData, validationLabels)
+            print("Validating...")
+            guesses = classifier.classify(validationData)
+            correct = [guesses[i] == validationLabels[i] for i in range(len(validationLabels))].count(True)
+            print(str(correct), ("correct out of " + str(len(validationLabels)) + " (%.1f%%).") % (
+                    100.0 * correct / len(validationLabels)))
+            print("Testing...")
+            guesses = classifier.classify(testData)
+            correct = [guesses[i] == testLabels[i] for i in range(len(testLabels))].count(True)
+            print(str(correct), ("correct out of " + str(len(testLabels)) + " (%.1f%%).") % (100.0 * correct / len(testLabels)))
+            analysis(classifier, guesses, testLabels, testData, rawTestData, printImage)
+            interval = time.time() - start
+            print "Training and testing time: " + str(interval)
+            outcomes[str(iterator)] = ["Training and testing time: {}".format(interval), "accuracy of training: {}%".format((100.0 * correct / len(testLabels)))]
+
+        print "outcomes: {}".format(outcomes)
+
+    else:
+        print("Training...")
+        start = time.time()
+        classifier.train(trainingData, trainingLabels, validationData, validationLabels)
+        interval = time.time() - start
+        print "Training time: " + str(interval)
+        print("Validating...")
+        guesses = classifier.classify(validationData)
+        correct = [guesses[i] == validationLabels[i] for i in range(len(validationLabels))].count(True)
+        print(str(correct), ("correct out of " + str(len(validationLabels)) + " (%.1f%%).") % (
+                100.0 * correct / len(validationLabels)))
+        print("Testing...")
+        guesses = classifier.classify(testData)
+        correct = [guesses[i] == testLabels[i] for i in range(len(testLabels))].count(True)
+        print(
+        str(correct), ("correct out of " + str(len(testLabels)) + " (%.1f%%).") % (100.0 * correct / len(testLabels)))
+        analysis(classifier, guesses, testLabels, testData, rawTestData, printImage)
+
 
     # do odds ratio computation if specified at command line
     if options.odds & (options.classifier != "mostFrequent"):

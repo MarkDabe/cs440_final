@@ -39,47 +39,22 @@ class PerceptronClassifier:
         datum is a counter from features to values for those features
         (and thus represents a vector a values).
         """
-
         self.features = trainingData[0].keys()  # could be useful later
 
         for key in self.weights:
             for feature in self.features:
-                self.weights[key][feature] = random.uniform(0.0, 1.0)
+                self.weights[key][feature] = random.randint(0, 1)
 
+        activations = util.Counter()
         for iteration in range(self.max_iterations):
-            print("Starting iteration ", iteration, "...")
+            print "Starting iteration ", iteration, "..."
             for itr in range(len(trainingData)):
-                activations = dict()
-                for key_1, value_1 in self.weights.items():
-                    activation = 0.0
-                    for key_2, value_2 in value_1.items():
-                        activation += value_2 * trainingData[itr][key_2]
-                    activations[key_1] = activation
+                for label in self.legalLabels:
+                    activations[label] = trainingData[itr].__mul__(self.weights[label])
+                if not (trainingLabels[itr] == activations.argMax()):
+                    self.weights[trainingLabels[itr]].__radd__(trainingData[itr])
+                    self.weights[activations.argMax()].__sub__(trainingData[itr])
 
-                max_activation = 0
-
-                for key, value in activations.items():
-                    if max_activation <= value:
-                        max_activation = value
-
-                if max_activation == trainingLabels[itr]:
-                    continue
-                else:
-                    for key, value in trainingData[itr].items():
-                        self.weights[trainingLabels[itr]][key] = self.weights[trainingLabels[itr]][key] + value
-
-                    other_classes = [key for key in self.weights]
-
-                    other_classes.remove(trainingLabels[itr])
-
-                    for cls in other_classes:
-                        for key, value in trainingData[itr].items():
-                            self.weights[cls][key] = self.weights[cls][key] - value
-
-                # prediction = self._predict(trainingData[itr], trainingLabels[itr])
-                # error = trainingLabels[itr] - prediction
-                # for key, value in trainingData[itr].items():
-                #     self.weights[trainingLabels[itr]][key] = self.weights[trainingLabels[itr]][key] + 0.1 * error * value
 
     def classify(self, data):
         """
