@@ -359,7 +359,7 @@ def runClassifier(args, options):
 
         numTraining = int(451 * trainingFactor)
 
-        print "using {} datapoints ouy of {} ({}%) for faces".format(numTraining, 451, 100 * (numTraining/float(451)))
+        print "using {} datapoints out of {} ({}%) for faces".format(numTraining, 451, 100 * (numTraining/float(451)))
 
         rawTrainingData = samples.loadDataFile("facedata/facedatatrain", numTraining, FACE_DATUM_WIDTH,
                                                FACE_DATUM_HEIGHT)
@@ -374,7 +374,7 @@ def runClassifier(args, options):
 
         numTraining = int(5000 * trainingFactor)
 
-        print "using {} datapoints ouy of {} ({}%) for digits".format(numTraining, TEST_SET_SIZE, 100 * (numTraining/float(5000)))
+        print "using {} datapoints out of {} ({}%) for digits".format(numTraining, 5000, 100 * (numTraining/float(5000)))
 
         rawTrainingData = samples.loadDataFile("digitdata/trainingimages", numTraining, DIGIT_DATUM_WIDTH,
                                                DIGIT_DATUM_HEIGHT)
