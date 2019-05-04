@@ -451,7 +451,7 @@ def runClassifier(args, options):
             outcomes[str(iterator)] = ["Training and testing time: {}".format(interval), "accuracy of training: {}%".format((100.0 * correct / len(testLabels)))]
 
         save_file = open("{}-{}-{}-{}.txt".format(options.data, options.classifier,trainingFactor,time.time()), "wb")
-        save_file.write(outcomes)
+        save_file.write("{}".format(outcomes))
         save_file.close()
 
         print "outcomes: {}".format(outcomes)
