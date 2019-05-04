@@ -39,7 +39,7 @@ class KNN(ClassificationMethod):
         for x in range(k):
             neighbors.append(distances[x][0])
         classVotes = {}
-        print neighbors
+        # print neighbors
         for x in range(len(neighbors)):
             response = neighbors[x]
             if response in classVotes:

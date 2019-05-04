@@ -64,43 +64,43 @@ def enhancedFeatureExtractorDigit(datum):
     """
 
     features = basicFeatureExtractorDigit(datum)
-    for x in range(DIGIT_DATUM_WIDTH):
-        for y in range(DIGIT_DATUM_HEIGHT):
-            if (datum.getPixel(x, y) > datum.getPixel(x, y - 1)):
-                features[(x, y, 0)] = 1
-            else:
-                features[(x, y, 0)] = 0
-            if (datum.getPixel(x, y - 1) > datum.getPixel(x, y)):
-                features[(x, y, 1)] = 1
-            else:
-                features[(x, y, 1)] = 0
-            if (datum.getPixel(x, y) > datum.getPixel(x - 1, y)):
-                features[(x, y, 2)] = 1
-            else:
-                features[(x, y, 2)] = 0
-            if (datum.getPixel(x - 1, y) > datum.getPixel(x, y)):
-                features[(x, y, 3)] = 1
-            else:
-                features[(x, y, 3)] = 0
-
-    def horizontalLineWidth():
-        halfHorizontalLineWidth = DIGIT_DATUM_WIDTH / 3
-        for y in range(DIGIT_DATUM_HEIGHT):
-            x_count = len([x for x in range(DIGIT_DATUM_WIDTH) if datum.getPixel(x, y) > 0])
-            if x_count > halfHorizontalLineWidth:
-                return 1
-        return 0
-
-    def verticalLineHeight():
-        halfVerticalLineHeight = DIGIT_DATUM_HEIGHT / 3
-        for x in range(DIGIT_DATUM_WIDTH):
-            y_count = len([y for y in range(DIGIT_DATUM_HEIGHT) if datum.getPixel(x, y) > 0])
-            if y_count > halfVerticalLineHeight:
-                return 1
-        return 0
-
-    features[(0)] = horizontalLineWidth()
-    features[(1)] = verticalLineHeight()
+    # for x in range(DIGIT_DATUM_WIDTH):
+    #     for y in range(DIGIT_DATUM_HEIGHT):
+    #         if (datum.getPixel(x, y) > datum.getPixel(x, y - 1)):
+    #             features[(x, y, 0)] = 1
+    #         else:
+    #             features[(x, y, 0)] = 0
+    #         if (datum.getPixel(x, y - 1) > datum.getPixel(x, y)):
+    #             features[(x, y, 1)] = 1
+    #         else:
+    #             features[(x, y, 1)] = 0
+    #         if (datum.getPixel(x, y) > datum.getPixel(x - 1, y)):
+    #             features[(x, y, 2)] = 1
+    #         else:
+    #             features[(x, y, 2)] = 0
+    #         if (datum.getPixel(x - 1, y) > datum.getPixel(x, y)):
+    #             features[(x, y, 3)] = 1
+    #         else:
+    #             features[(x, y, 3)] = 0
+    #
+    # def horizontalLineWidth():
+    #     halfHorizontalLineWidth = DIGIT_DATUM_WIDTH / 3
+    #     for y in range(DIGIT_DATUM_HEIGHT):
+    #         x_count = len([x for x in range(DIGIT_DATUM_WIDTH) if datum.getPixel(x, y) > 0])
+    #         if x_count > halfHorizontalLineWidth:
+    #             return 1
+    #     return 0
+    #
+    # def verticalLineHeight():
+    #     halfVerticalLineHeight = DIGIT_DATUM_HEIGHT / 3
+    #     for x in range(DIGIT_DATUM_WIDTH):
+    #         y_count = len([y for y in range(DIGIT_DATUM_HEIGHT) if datum.getPixel(x, y) > 0])
+    #         if y_count > halfVerticalLineHeight:
+    #             return 1
+    #     return 0
+    #
+    # features[(0)] = horizontalLineWidth()
+    # features[(1)] = verticalLineHeight()
 
     return features
 
@@ -450,14 +450,16 @@ def runClassifier(args, options):
             print "Training and testing time: " + str(interval)
             outcomes[str(iterator)] = ["Training and testing time: {}".format(interval), "accuracy of training: {}%".format((100.0 * correct / len(testLabels)))]
 
+        save_file = open("{}-{}-{}-{}.txt".format(options.data, options.classifier,trainingFactor,time.time()), "wb")
+        save_file.write(outcomes)
+        save_file.close()
+
         print "outcomes: {}".format(outcomes)
 
     else:
         print("Training...")
         start = time.time()
         classifier.train(trainingData, trainingLabels, validationData, validationLabels)
-        interval = time.time() - start
-        print "Training time: " + str(interval)
         print("Validating...")
         guesses = classifier.classify(validationData)
         correct = [guesses[i] == validationLabels[i] for i in range(len(validationLabels))].count(True)
@@ -469,6 +471,9 @@ def runClassifier(args, options):
         print(
         str(correct), ("correct out of " + str(len(testLabels)) + " (%.1f%%).") % (100.0 * correct / len(testLabels)))
         analysis(classifier, guesses, testLabels, testData, rawTestData, printImage)
+        interval = time.time() - start
+        print "Training  and testing time: " + str(interval)
+
 
 
     # do odds ratio computation if specified at command line

@@ -1,4 +1,5 @@
 knn faces:
+
 0.1 outcomes: {'1': ['Training and testing time: 106.056315899', 'accuracy of training: 84.0%'], '0': ['Training and testing time: 96.5123279095', 'accuracy of training: 78.0%'], '3': ['Training and testing time: 96.3587009907', 'accuracy of training: 80.0%'], '2': ['Training and testing time: 99.2590420246', 'accuracy of training: 76.6666666667%'], '4': ['Training and testing time: 106.201793194', 'accuracy of training: 80.0%']}
 
 0.3 outcomes: {'1': ['Training and testing time: 366.005607128', 'accuracy of training: 80.6666666667%'], '0': ['Training and testing time: 316.230751991', 'accuracy of training: 84.0%'], '3': ['Training and testing time: 381.115477085', 'accuracy of training: 84.0%'], '2': ['Training and testing time: 401.010239124', 'accuracy of training: 84.6666666667%'], '4': ['Training and testing time: 327.566791058', 'accuracy of training: 88.0%']}
@@ -32,6 +33,8 @@ perceptron digits
 0.3 outcomes: {'1': ['Training and testing time: 85.7606229782', 'accuracy of training: 79.0%'], '0': ['Training and testing time: 80.3745398521', 'accuracy of training: 76.4%'], '3': ['Training and testing time: 85.4559087753', 'accuracy of training: 76.7%'], '2': ['Training and testing time: 84.3105840683', 'accuracy of training: 78.8%'], '4': ['Training and testing time: 72.5502150059', 'accuracy of training: 75.4%']}
 
 0.5 outcomes: {'1': ['Training and testing time: 116.50505209', 'accuracy of training: 79.3%'], '0': ['Training and testing time: 122.047744989', 'accuracy of training: 80.4%'], '3': ['Training and testing time: 118.138401985', 'accuracy of training: 79.0%'], '2': ['Training and testing time: 119.304790974', 'accuracy of training: 80.1%'], '4': ['Training and testing time: 106.412955999', 'accuracy of training: 78.3%']}
+
+0.7 outcomes: {'1': ['Training and testing time: 138.428774118', 'accuracy of training: 79.1%'], '0': ['Training and testing time: 138.239382982', 'accuracy of training: 77.9%'], '3': ['Training and testing time: 139.358223915', 'accuracy of training: 79.7%'], '2': ['Training and testing time: 138.42663002', 'accuracy of training: 77.0%'], '4': ['Training and testing time: 138.52820015', 'accuracy of training: 80.5%']}
 
 0.8 outcomes: {'1': ['Training and testing time: 175.377850056', 'accuracy of training: 79.5%'], '0': ['Training and testing time: 172.67882514', 'accuracy of training: 78.1%'], '3': ['Training and testing time: 179.288959026', 'accuracy of training: 79.2%'], '2': ['Training and testing time: 187.883742094', 'accuracy of training: 81.6%'], '4': ['Training and testing time: 175.65352416', 'accuracy of training: 78.4%']}
 
