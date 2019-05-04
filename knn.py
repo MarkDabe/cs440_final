@@ -20,7 +20,7 @@ class KNN(ClassificationMethod):
     def classify(self, data):
         guesses = []
         for datum in data:
-            guesses.append(self._getNeighbors(self.trainingData, datum, 15))
+            guesses.append(self._getNeighbors(self.trainingData, datum, 8))
         return guesses
 
     def _euclideanDistance(self, instance1, instance2):

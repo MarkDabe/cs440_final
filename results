@@ -1,0 +1,38 @@
+knn faces:
+0.1 outcomes: {'1': ['Training and testing time: 106.056315899', 'accuracy of training: 84.0%'], '0': ['Training and testing time: 96.5123279095', 'accuracy of training: 78.0%'], '3': ['Training and testing time: 96.3587009907', 'accuracy of training: 80.0%'], '2': ['Training and testing time: 99.2590420246', 'accuracy of training: 76.6666666667%'], '4': ['Training and testing time: 106.201793194', 'accuracy of training: 80.0%']}
+
+0.3 outcomes: {'1': ['Training and testing time: 366.005607128', 'accuracy of training: 80.6666666667%'], '0': ['Training and testing time: 316.230751991', 'accuracy of training: 84.0%'], '3': ['Training and testing time: 381.115477085', 'accuracy of training: 84.0%'], '2': ['Training and testing time: 401.010239124', 'accuracy of training: 84.6666666667%'], '4': ['Training and testing time: 327.566791058', 'accuracy of training: 88.0%']}
+
+0.5 outcomes: {'1': ['Training and testing time: 631.473579884', 'accuracy of training: 86.0%'], '0': ['Training and testing time: 647.899679184', 'accuracy of training: 90.0%'], '3': ['Training and testing time: 706.118804932', 'accuracy of training: 83.3333333333%'], '2': ['Training and testing time: 682.723504066', 'accuracy of training: 88.0%'], '4': ['Training and testing time: 667.273298025', 'accuracy of training: 86.0%']}
+
+perceptron faces:
+
+0.1 outcomes: {'1': ['Training and testing time: 8.99745202065', 'accuracy of training: 51.3333333333%'], '0': ['Training and testing time: 6.577906847', 'accuracy of training: 79.3333333333%'], '3': ['Training and testing time: 7.03481888771', 'accuracy of training: 65.3333333333%'], '2': ['Training and testing time: 6.93811678886', 'accuracy of training: 58.6666666667%'], '4': ['Training and testing time: 7.02980804443', 'accuracy of training: 81.3333333333%']}
+
+0.2 outcomes: {'1': ['Training and testing time: 9.10202598572', 'accuracy of training: 71.3333333333%'], '0': ['Training and testing time: 9.80208706856', 'accuracy of training: 86.6666666667%'], '3': ['Training and testing time: 9.50270104408', 'accuracy of training: 64.0%'], '2': ['Training and testing time: 8.69036579132', 'accuracy of training: 52.0%'], '4': ['Training and testing time: 9.82113003731', 'accuracy of training: 81.3333333333%']}
+
+0.3 outcomes: {'1': ['Training and testing time: 11.6110351086', 'accuracy of training: 79.3333333333%'], '0': ['Training and testing time: 12.9649357796', 'accuracy of training: 86.0%'], '3': ['Training and testing time: 12.0278558731', 'accuracy of training: 83.3333333333%'], '2': ['Training and testing time: 10.6898970604', 'accuracy of training: 76.0%'], '4': ['Training and testing time: 11.9141879082', 'accuracy of training: 88.6666666667%']}
+
+0.4 outcomes: {'1': ['Training and testing time: 14.3477208614', 'accuracy of training: 82.0%'], '0': ['Training and testing time: 14.49969697', 'accuracy of training: 86.0%'], '3': ['Training and testing time: 15.8551261425', 'accuracy of training: 82.6666666667%'], '2': ['Training and testing time: 14.1918270588', 'accuracy of training: 89.3333333333%'], '4': ['Training and testing time: 15.4106199741', 'accuracy of training: 88.0%']}
+
+0.5 outcomes: {'1': ['Training and testing time: 15.3246028423', 'accuracy of training: 90.0%'], '0': ['Training and testing time: 15.9812350273', 'accuracy of training: 86.0%'], '3': ['Training and testing time: 15.3552851677', 'accuracy of training: 86.0%'], '2': ['Training and testing time: 15.3283700943', 'accuracy of training: 78.0%'], '4': ['Training and testing time: 16.168637991', 'accuracy of training: 88.0%']}
+
+0.7 outcomes: {'1': ['Training and testing time: 24.3869791031', 'accuracy of training: 84.6666666667%'], '0': ['Training and testing time: 19.209510088', 'accuracy of training: 85.3333333333%'], '3': ['Training and testing time: 18.6033380032', 'accuracy of training: 86.6666666667%'], '2': ['Training and testing time: 24.8629500866', 'accuracy of training: 87.3333333333%'], '4': ['Training and testing time: 22.2770888805', 'accuracy of training: 80.6666666667%']}
+
+0.9 outcomes: {'1': ['Training and testing time: 22.9372689724', 'accuracy of training: 86.3333333333%'], '0': ['Training and testing time: 23.5909569263', 'accuracy of training: 87.3333333333%'], '3': ['Training and testing time: 23.0615561008', 'accuracy of training: 79.3333333333%'], '2': ['Training and testing time: 23.0389859676', 'accuracy of training: 77.3333333333%'], '4': ['Training and testing time: 23.2801380157', 'accuracy of training: 90.0%']}
+
+1.0 outcomes: {'1': ['Training and testing time: 30.255808115', 'accuracy of training: 89.3333333333%'], '0': ['Training and testing time: 25.0361530781', 'accuracy of training: 87.6666666667%'], '3': ['Training and testing time: 29.1191620827', 'accuracy of training: 88.6666666667%'], '2': ['Training and testing time: 32.18050313', 'accuracy of training: 87.6666666667%'], '4': ['Training and testing time: 28.7166309357', 'accuracy of training: 90.0%']}
+
+perceptron digits
+
+0.1 outcomes: {'1': ['Training and testing time: 45.2149369717', 'accuracy of training: 67.6%'], '0': ['Training and testing time: 42.934540987', 'accuracy of training: 72.3%'], '3': ['Training and testing time: 44.4107918739', 'accuracy of training: 72.6%'], '2': ['Training and testing time: 43.7733979225', 'accuracy of training: 74.8%'], '4': ['Training and testing time: 40.3084831238', 'accuracy of training: 72.1%']}
+
+0.2 outcomes: {'1': ['Training and testing time: 64.3551790714', 'accuracy of training: 75.8%'], '0': ['Training and testing time: 56.2081930637', 'accuracy of training: 70.5%'], '3': ['Training and testing time: 63.5613100529', 'accuracy of training: 80.0%'], '2': ['Training and testing time: 60.1211500168', 'accuracy of training: 76.7%'], '4': ['Training and testing time: 64.1753299236', 'accuracy of training: 69.9%']}
+
+0.3 outcomes: {'1': ['Training and testing time: 85.7606229782', 'accuracy of training: 79.0%'], '0': ['Training and testing time: 80.3745398521', 'accuracy of training: 76.4%'], '3': ['Training and testing time: 85.4559087753', 'accuracy of training: 76.7%'], '2': ['Training and testing time: 84.3105840683', 'accuracy of training: 78.8%'], '4': ['Training and testing time: 72.5502150059', 'accuracy of training: 75.4%']}
+
+0.5 outcomes: {'1': ['Training and testing time: 116.50505209', 'accuracy of training: 79.3%'], '0': ['Training and testing time: 122.047744989', 'accuracy of training: 80.4%'], '3': ['Training and testing time: 118.138401985', 'accuracy of training: 79.0%'], '2': ['Training and testing time: 119.304790974', 'accuracy of training: 80.1%'], '4': ['Training and testing time: 106.412955999', 'accuracy of training: 78.3%']}
+
+0.8 outcomes: {'1': ['Training and testing time: 175.377850056', 'accuracy of training: 79.5%'], '0': ['Training and testing time: 172.67882514', 'accuracy of training: 78.1%'], '3': ['Training and testing time: 179.288959026', 'accuracy of training: 79.2%'], '2': ['Training and testing time: 187.883742094', 'accuracy of training: 81.6%'], '4': ['Training and testing time: 175.65352416', 'accuracy of training: 78.4%']}
+
+1.0 outcomes: {'1': ['Training and testing time: 185.508673191', 'accuracy of training: 79.3%'], '0': ['Training and testing time: 189.178423166', 'accuracy of training: 79.0%'], '3': ['Training and testing time: 493.869305134', 'accuracy of training: 80.5%'], '2': ['Training and testing time: 184.978957891', 'accuracy of training: 79.8%'], '4': ['Training and testing time: 213.890353918', 'accuracy of training: 78.4%']}
