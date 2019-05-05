@@ -1,3 +1,5 @@
+Training and testing time is in seconds. Accuracy of training is the accuracy of prediction of the testing set after the training with the given fraction of the training set.
+
 knn faces:
 
 0.1 outcomes: {'1': ['Training and testing time: 106.056315899', 'accuracy of training: 84.0%'], '0': ['Training and testing time: 96.5123279095', 'accuracy of training: 78.0%'], '3': ['Training and testing time: 96.3587009907', 'accuracy of training: 80.0%'], '2': ['Training and testing time: 99.2590420246', 'accuracy of training: 76.6666666667%'], '4': ['Training and testing time: 106.201793194', 'accuracy of training: 80.0%']}
@@ -5,6 +7,25 @@ knn faces:
 0.3 outcomes: {'1': ['Training and testing time: 366.005607128', 'accuracy of training: 80.6666666667%'], '0': ['Training and testing time: 316.230751991', 'accuracy of training: 84.0%'], '3': ['Training and testing time: 381.115477085', 'accuracy of training: 84.0%'], '2': ['Training and testing time: 401.010239124', 'accuracy of training: 84.6666666667%'], '4': ['Training and testing time: 327.566791058', 'accuracy of training: 88.0%']}
 
 0.5 outcomes: {'1': ['Training and testing time: 631.473579884', 'accuracy of training: 86.0%'], '0': ['Training and testing time: 647.899679184', 'accuracy of training: 90.0%'], '3': ['Training and testing time: 706.118804932', 'accuracy of training: 83.3333333333%'], '2': ['Training and testing time: 682.723504066', 'accuracy of training: 88.0%'], '4': ['Training and testing time: 667.273298025', 'accuracy of training: 86.0%']}
+
+1.0 outcomes: {'1': ['Training and testing time: 1334.24353981', 'accuracy of training: 88.6666666667%'], '0': ['Training and testing time: 1341.64431', 'accuracy of training: 90.6666666667%'], '3': ['Training and testing time: 1230.59250402', 'accuracy of training: 88.6666666667%'], '2': ['Training and testing time: 1273.61244488', 'accuracy of training: 86.6666666667%'], '4': ['Training and testing time: 1258.39193296', 'accuracy of training: 92.6666666667%']}
+
+knn digits:
+
+0.1 outcomes: {'1': ['Training and testing time: 529.562810898', 'accuracy of training: 75.2%'], '0': ['Training and testing time: 671.744868994', 'accuracy of training: 77.0%'], '3': ['Training and testing time: 685.815897942', 'accuracy of training: 73.2%'], '2': ['Training and testing time: 686.931555986', 'accuracy of training: 73.2%'], '4': ['Training and testing time: 686.931555986', 'accuracy of training: 75.7%']}
+
+0.2 outcomes: {'1': ['Training and testing time: 1249.35772181', 'accuracy of training: 82.2%'], '0': ['Training and testing time: 1351.48569989', 'accuracy of training: 79.3%'], '3': ['Training and testing time: 1287.05611396', 'accuracy of training: 80.2%'], '2': ['Training and testing time: 1398.22604394', 'accuracy of training: 82.0%'], '4': ['Training and testing time: 1546.16223311', 'accuracy of training: 82.7%']}
+
+0.3 outcomes: {'1': ['Training and testing time: 1987.75520802', 'accuracy of training: 84.3%'], '0': ['Training and testing time: 1978.17075205', 'accuracy of training: 83.1%'], '3': ['Training and testing time: 2223.0538609', 'accuracy of training: 85.4%'], '2': ['Training and testing time:  2290.01942396', 'accuracy of training: 83.0%'], '4': ['Training and testing time: 2199.6989181', 'accuracy of training: 84.2%']}
+
+0.4 outcomes: {'1': ['Training and testing time: 2661.95256209', 'accuracy of training: 86.2%'], '0': ['Training and testing time:  2702.66273117', 'accuracy of training: 84.6%'], '3': ['Training and testing time: 3019.54963994', 'accuracy of training: 84.1%'], '2': ['Training and testing time:  2923.84819293', 'accuracy of training: 85.8%'], '4': ['Training and testing time: 2825.84814256', 'accuracy of training: 84.6%']}
+
+0.5 outcomes: {'1': ['Training and testing time: 3372.82698798', 'accuracy of training: 85.2%'], '0': ['Training and testing time:  3704.3310039', 'accuracy of training: 86.6%'], '3': ['Training and testing time: 3687.02330184', 'accuracy of training: 85.8%'], '2': ['Training and testing time:  3623.60608482', 'accuracy of training: 86.1%'], '4': ['Training and testing time: 3338.90427399', 'accuracy of training: 86.2%']}
+
+0.8  {'1': ['Training and testing time: 5916.33878589', 'accuracy of training: 87.1%'], '0': ['Training and testing time:  5413.67015386', 'accuracy of training: 87.7%']}
+
+1.0  {'1': ['Training and testing time: 7527.509938', 'accuracy of training: 87.2%'], '0': ['Training and testing time:  6908.45718503', 'accuracy of training: 88.6%']}
+
 
 perceptron faces:
 
@@ -39,3 +60,12 @@ perceptron digits
 0.8 outcomes: {'1': ['Training and testing time: 175.377850056', 'accuracy of training: 79.5%'], '0': ['Training and testing time: 172.67882514', 'accuracy of training: 78.1%'], '3': ['Training and testing time: 179.288959026', 'accuracy of training: 79.2%'], '2': ['Training and testing time: 187.883742094', 'accuracy of training: 81.6%'], '4': ['Training and testing time: 175.65352416', 'accuracy of training: 78.4%']}
 
 1.0 outcomes: {'1': ['Training and testing time: 185.508673191', 'accuracy of training: 79.3%'], '0': ['Training and testing time: 189.178423166', 'accuracy of training: 79.0%'], '3': ['Training and testing time: 493.869305134', 'accuracy of training: 80.5%'], '2': ['Training and testing time: 184.978957891', 'accuracy of training: 79.8%'], '4': ['Training and testing time: 213.890353918', 'accuracy of training: 78.4%']}
+
+
+naiveBayes faces:
+
+0.1 outcomes: {'1': ['Training and testing time: 210.148000002', 'accuracy of training: 77.0%'], '0': ['Training and testing time: 210.177999973', 'accuracy of training: 76.9%'], '3': ['Training and testing time: 213.753000021', 'accuracy of training: 77.3%'], '2': ['Training and testing time: 213.647000074', 'accuracy of training: 73.6%'], '4': ['Training and testing time: 211.822000027', 'accuracy of training: 77.2%']}
+
+1.0 outcomes: {'1': ['Training and testing time: 10.2109999657', 'accuracy of training: 88.6666666667%'], '0': ['Training and testing time: 9.80499982834', 'accuracy of training: 88.6666666667%'], '3': ['Training and testing time: 10.1270000935', 'accuracy of training: 92.0%'], '2': ['Training and testing time: 10.0190000534', 'accuracy of training: 92.0%'], '4': ['Training and testing time: 9.69500017166', 'accuracy of training: 88.0%']}
+
+naiveBayes digits:
